@@ -235,7 +235,7 @@ export default function CourseLandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <p className="text-sm sm:text-base bg-gradient-to-r from-[#FFFF00] to-[#FF8C00] bg-clip-text text-transparent">
-              © 2024 Your Course Platform. All rights reserved.
+              © 2024 Clipfarm Course Platform. All rights reserved.
             </p>
           </div>
         </div>
