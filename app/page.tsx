@@ -291,7 +291,7 @@ function VideoPlayer({ src, title }: VideoPlayerProps) {
                     onPointerUp={handleProgressEnd}
                     max={100}
                     step={0.1}
-                    className="w-full cursor-pointer [&_[role=slider]]:bg-gradient-to-r [&_[role=slider]]:from-[#FFD700] [&_[role=slider]]:to-[#FF6B35] [&_[role=slider]]:border-2 [&_[role=slider]]:border-[#FFD700] [&_[role=slider]]:shadow-md [&_[role=slider]]:shadow-[#FFD700]/40 [&_[role=slider]]:w-4 [&_[role=slider]]:h-4 [&_.bg-primary]:bg-gradient-to-r [&_.bg-primary]:from-[#FFD700] [&_.bg-primary]:to-[#FF6B35] [&_.bg-secondary]:bg-gray-600"
+                    className="w-full cursor-pointer [&_[role=slider]]:bg-gradient-to-r [&_[role=slider]]:from-[#FFD7কিন্ত00] [&_[role=slider]]:to-[#FF6B35] [&_[role=slider]]:border-2 [&_[role=slider]]:border-[#FFD700] [&_[role=slider]]:shadow-md [&_[role=slider]]:shadow-[#FFD700]/40 [&_[role=slider]]:w-4 [&_[role=slider]]:h-4 [&_.bg-primary]:bg-gradient-to-r [&_.bg-primary]:from-[#FFD700] [&_.bg-primary]:to-[#FF6B35] [&_.bg-secondary]:bg-gray-600"
                     disabled={isLoading || duration === 0}
                   />
                 </div>
@@ -495,9 +495,9 @@ export default function CourseLandingPage() {
   return (
     <div className="min-h-screen bg-[#0D0D0D] overflow-x-hidden">
       {/* Hero Section */}
-      <section className="border-b border-orange-500/30 relative">
+      <section className="relative">
         {/* Gradient Background Effect */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-purple-900/20 to-blue-900/20"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-900/20 via-purple-900/30 via-orange-900/20 to-transparent"></div>
 
         <div className="relative max-w-7xl mx-auto px-4 py-12 sm:py-16 md:py-20 lg:py-24 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
@@ -505,7 +505,7 @@ export default function CourseLandingPage() {
               Welcome to ClipFarm Course Videos
             </h1>
             <p className="text-base sm:text-lg md:text-xl lg:text-2xl bg-gradient-to-r from-[#FFFF00] to-[#FF8C00] bg-clip-text text-transparent max-w-3xl mx-auto mb-8 sm:mb-10 px-4">
-              Master web development with our comprehensive video course
+              Master Clipping with our comprehensive video course
             </p>
             <div className="flex justify-center">
               <Button
@@ -521,7 +521,10 @@ export default function CourseLandingPage() {
       </section>
 
       {/* Video Lessons Section */}
-      <section ref={videoListRef} className="py-12 sm:py-16 lg:py-20">
+      <section
+        ref={videoListRef}
+        className="py-12 sm:py-16 lg:py-20 bg-gradient-to-b from-transparent via-orange-900/10 to-transparent"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="space-y-8 sm:space-y-12 lg:space-y-16">
             {lessons.map((lesson) => (
@@ -546,7 +549,7 @@ export default function CourseLandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-orange-500/30 py-6 sm:py-8 lg:py-12">
+      <footer className="py-6 sm:py-8 lg:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <p className="text-sm sm:text-base bg-gradient-to-r from-[#FFFF00] to-[#FF8C00] bg-clip-text text-transparent">
