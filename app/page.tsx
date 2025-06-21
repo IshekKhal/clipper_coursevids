@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { Play, Pause } from "lucide-react"
+import { Play, Pause, ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { LoadingSpinner, LoadingDots } from "@/components/loading-spinner"
@@ -12,10 +12,33 @@ interface VideoPlayerProps {
 }
 
 function VideoPlayer({ src, title }: VideoPlayerProps) {
+  const [isLoading, setIsLoading] = useState(true)
   const [isPlaying, setIsPlaying] = useState(false)
   const [playbackRate, setPlaybackRate] = useState("1")
-  const [isLoading, setIsLoading] = useState(true)
   const videoRef = useRef<HTMLVideoElement>(null)
+  const [isVimeo, setIsVimeo] = useState(false)
+
+  useEffect(() => {
+    // Check if the URL is a Vimeo URL
+    const vimeoPattern = /vimeo\.com|player\.vimeo\.com/
+    setIsVimeo(vimeoPattern.test(src))
+  }, [src])
+
+  const handleIframeLoad = () => {
+    setIsLoading(false)
+  }
+
+  const openInNewTab = () => {
+    if (isVimeo) {
+      // Convert player URL back to regular Vimeo URL
+      const videoId = src.match(/video\/(\d+)/)?.[1]
+      if (videoId) {
+        window.open(`https://vimeo.com/${videoId}`, "_blank")
+      }
+    } else {
+      window.open(src, "_blank")
+    }
+  }
 
   const togglePlay = () => {
     if (videoRef.current) {
@@ -43,69 +66,112 @@ function VideoPlayer({ src, title }: VideoPlayerProps) {
   return (
     <div className="bg-gray-900/50 backdrop-blur-sm rounded-lg shadow-2xl shadow-orange-500/20 overflow-hidden border border-orange-500/30">
       <div className="relative">
-        <video
-          ref={videoRef}
-          className="w-full aspect-video bg-black"
-          onPlay={handleVideoPlay}
-          onPause={handleVideoPause}
-          onLoadStart={handleVideoLoadStart}
-          onCanPlay={handleVideoCanPlay}
-          preload="metadata"
-        >
-          <source src={src} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        {isVimeo ? (
+          <>
+            {/* Loading Overlay */}
+            {isLoading && (
+              <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-10">
+                <LoadingSpinner size="lg" text="Loading video..." />
+              </div>
+            )}
 
-        {/* Loading Overlay */}
-        {isLoading && (
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center">
-            <LoadingSpinner size="lg" text="Loading video..." />
-          </div>
-        )}
+            {/* Vimeo Iframe */}
+            <iframe
+              src={`${src}?autoplay=0&loop=0&muted=0&gesture=media&playsinline=1&byline=0&portrait=0&title=0`}
+              className="w-full aspect-video bg-black"
+              frameBorder="0"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowFullScreen
+              onLoad={handleIframeLoad}
+              title={title}
+            />
 
-        {/* Custom Controls Overlay */}
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-3 sm:p-4">
-          <div className="flex items-center justify-between gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={togglePlay}
-              className="text-white hover:bg-orange-500/30 hover:text-orange-200 transition-all duration-300 p-2 sm:p-3"
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <LoadingDots />
-              ) : isPlaying ? (
-                <Pause className="h-4 w-4 sm:h-5 sm:w-5" />
-              ) : (
-                <Play className="h-4 w-4 sm:h-5 sm:w-5" />
-              )}
-            </Button>
+            {/* Custom Controls Overlay */}
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-3 sm:p-4">
+              <div className="flex items-center justify-between gap-2">
+                <div className="text-white text-xs sm:text-sm font-medium">Use video controls below</div>
 
-            <div className="flex items-center gap-1 sm:gap-2">
-              <span className="text-white text-xs sm:text-sm font-medium">Speed:</span>
-              <Select value={playbackRate} onValueChange={handleSpeedChange} disabled={isLoading}>
-                <SelectTrigger className="w-16 sm:w-20 h-7 sm:h-8 bg-black/60 border-orange-500/50 text-white text-xs sm:text-sm hover:border-orange-400 transition-colors">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-black border-orange-500/50">
-                  <SelectItem value="1" className="text-white hover:bg-orange-500/30">
-                    1x
-                  </SelectItem>
-                  <SelectItem value="1.25" className="text-white hover:bg-orange-500/30">
-                    1.25x
-                  </SelectItem>
-                  <SelectItem value="1.5" className="text-white hover:bg-orange-500/30">
-                    1.5x
-                  </SelectItem>
-                  <SelectItem value="2" className="text-white hover:bg-orange-500/30">
-                    2x
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={openInNewTab}
+                  className="text-white hover:bg-orange-500/30 hover:text-orange-200 transition-all duration-300 p-2 sm:p-3"
+                >
+                  <ExternalLink className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span className="ml-1 text-xs">Open</span>
+                </Button>
+              </div>
             </div>
-          </div>
-        </div>
+          </>
+        ) : (
+          <>
+            {/* Loading Overlay */}
+            {isLoading && (
+              <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center">
+                <LoadingSpinner size="lg" text="Loading video..." />
+              </div>
+            )}
+
+            {/* HTML5 Video Player */}
+            <video
+              ref={videoRef}
+              className="w-full aspect-video bg-black"
+              onPlay={handleVideoPlay}
+              onPause={handleVideoPause}
+              onLoadStart={handleVideoLoadStart}
+              onCanPlay={handleVideoCanPlay}
+              preload="metadata"
+              controls
+            >
+              <source src={src} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+
+            {/* Custom Controls Overlay */}
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-3 sm:p-4">
+              <div className="flex items-center justify-between gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={togglePlay}
+                  className="text-white hover:bg-orange-500/30 hover:text-orange-200 transition-all duration-300 p-2 sm:p-3"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <LoadingDots />
+                  ) : isPlaying ? (
+                    <Pause className="h-4 w-4 sm:h-5 sm:w-5" />
+                  ) : (
+                    <Play className="h-4 w-4 sm:h-5 sm:w-5" />
+                  )}
+                </Button>
+
+                <div className="flex items-center gap-1 sm:gap-2">
+                  <span className="text-white text-xs sm:text-sm font-medium">Speed:</span>
+                  <Select value={playbackRate} onValueChange={handleSpeedChange} disabled={isLoading}>
+                    <SelectTrigger className="w-16 sm:w-20 h-7 sm:h-8 bg-black/60 border-orange-500/50 text-white text-xs sm:text-sm hover:border-orange-400 transition-colors">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-black border-orange-500/50">
+                      <SelectItem value="1" className="text-white hover:bg-orange-500/30">
+                        1x
+                      </SelectItem>
+                      <SelectItem value="1.25" className="text-white hover:bg-orange-500/30">
+                        1.25x
+                      </SelectItem>
+                      <SelectItem value="1.5" className="text-white hover:bg-orange-500/30">
+                        1.5x
+                      </SelectItem>
+                      <SelectItem value="2" className="text-white hover:bg-orange-500/30">
+                        2x
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   )
@@ -140,25 +206,25 @@ export default function CourseLandingPage() {
     },
     {
       id: 2,
-      title: "",
+      title: "Module 2",
       description: "Learn the core concepts you'll need throughout the course",
       videoUrl: "https://example.com/video2.mp4",
     },
     {
       id: 3,
-      title: "",
+      title: "Module 3",
       description: "Apply what you've learned with real-world examples",
       videoUrl: "https://example.com/video3.mp4",
     },
     {
       id: 4,
-      title: "",
+      title: "Module 4",
       description: "Dive deeper into advanced methods and best practices",
       videoUrl: "https://example.com/video4.mp4",
     },
     {
       id: 5,
-      title: "",
+      title: "Module 5",
       description: "Put everything together in a comprehensive final project",
       videoUrl: "https://example.com/video5.mp4",
     },
