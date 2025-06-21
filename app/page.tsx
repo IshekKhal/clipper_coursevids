@@ -134,9 +134,9 @@ export default function CourseLandingPage() {
   const lessons = [
     {
       id: 1,
-      title: "",
+      title: "Module 1",
       description: "Get started with the fundamentals and course overview",
-      videoUrl: "https://vimeo.com/1095192547",
+      videoUrl: "https://player.vimeo.com/video/1095192547",
     },
     {
       id: 2,
