@@ -136,7 +136,7 @@ export default function CourseLandingPage() {
       id: 1,
       title: "",
       description: "Get started with the fundamentals and course overview",
-      videoUrl: "https://example.com/video1.mp4",
+      videoUrl: "https://vimeo.com/1095192547",
     },
     {
       id: 2,
